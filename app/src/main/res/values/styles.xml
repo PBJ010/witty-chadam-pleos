@@ -1,0 +1,5 @@
+<resources>
+    <!-- The WebView's prefers-color-scheme follows the activity theme. DeviceDefault (and its DayNight) is dark on this
+         AAOS image, so the page was always dark: Material Light by day, Material (dark) in the car's night mode (values-night). -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar" />
+</resources>
