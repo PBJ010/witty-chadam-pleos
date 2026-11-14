@@ -133,21 +133,28 @@ class PleosNative(private val context: Context, private val evaluate: (String) -
      *  the CRN). When the car does not say - or says the emulator's "Hyundai 42dot / Connect" - the build's car stands in;
      *  the web app matches the family in its catalogue. Battery and range come from the car. */
     private fun vehicle(id: String) {
-        val (maker, model) = carMakeAndModel() ?: (BuildConfig.CAR_MAKER to BuildConfig.CAR_MODEL)
-        val answer = JSONObject().put("maker", maker).put("model", model).put("powertrain", "ev")
+        // The car service can take more than 5 s to come up (emulator boots, 2026-11-14): answer within 3 s with what is
+        // known by then - the car's make and model if it said, else the build's car - and fill battery and range when they come.
+        val answer = JSONObject().put("maker", BuildConfig.CAR_MAKER).put("model", BuildConfig.CAR_MODEL).put("powertrain", "ev")
             .put("batterySoc", JSONObject.NULL).put("rangeKm", JSONObject.NULL)
-        // The SDK answers in the car's units (verified on the emulator 2026-09-28): battery level and capacity in Wh
-        // (77400 / 77400 on the emulator's car), range in metres (500000 = 500 km).
-        val battery = vehicle.getEvBattery()
-        battery.getEvBatteryLevel({ level ->
-            battery.getEvBatteryCapacity({ capacity ->
-                if (level != null && capacity != null && capacity > 0f) answer.put("batterySoc", Math.round(level / capacity * 100f))
-                vehicle.getOdometer().getRangeRemainingDistance({ range ->
-                    if (range != null) answer.put("rangeKm", Math.round(range / 1000f))
-                    resolve(id, answer)
-                }, { resolve(id, answer) })
-            }, { error -> Log.w(TAG, "capacity", error); resolve(id, answer) })
-        }, { error -> Log.w(TAG, "battery", error); resolve(id, answer) })
+        val done = java.util.concurrent.atomic.AtomicBoolean(false)
+        val finish = { if (done.compareAndSet(false, true)) synchronized(answer) { resolve(id, JSONObject(answer.toString())) } }
+        main.postDelayed({ finish() }, 3000)
+        Thread {
+            carMakeAndModel()?.let { (maker, model) -> synchronized(answer) { answer.put("maker", maker).put("model", model) } }
+            // The SDK answers in the car's units (verified on the emulator 2026-09-28): battery level and capacity in Wh
+            // (77400 / 77400 on the emulator's car), range in metres (500000 = 500 km).
+            val battery = vehicle.getEvBattery()
+            battery.getEvBatteryLevel({ level ->
+                battery.getEvBatteryCapacity({ capacity ->
+                    if (level != null && capacity != null && capacity > 0f) synchronized(answer) { answer.put("batterySoc", Math.round(level / capacity * 100f)) }
+                    vehicle.getOdometer().getRangeRemainingDistance({ range ->
+                        if (range != null) synchronized(answer) { answer.put("rangeKm", Math.round(range / 1000f)) }
+                        finish()
+                    }, { finish() })
+                }, { error -> Log.w(TAG, "capacity", error); finish() })
+            }, { error -> Log.w(TAG, "battery", error); finish() })
+        }.start()
     }
 
     /** Everything the Vehicle SDK lets an app read about the trip-relevant state of the car, each value as the car
