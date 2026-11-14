@@ -29,4 +29,9 @@
     location: function () { return ask("location"); },
     navigate: function (stops) { return ask("navigate", stops); }
   };
+  // In the car the left panel starts folded (only the icon strip stays), so the map and the trip get the screen.
+  document.addEventListener("DOMContentLoaded", function () {
+    var app = document.querySelector(".app");
+    if (app && !window.matchMedia("(max-width: 767px)").matches) app.classList.add("panel-closed");
+  });
 })();
