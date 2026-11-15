@@ -1,4 +1,4 @@
-# 차담 (Chadam) — Pleos Connect 차량용 앱
+# Witty — Pleos Connect 차량용 앱
 
 **말 한 줄이면, 차가 알려 준 위치와 배터리로 집에서 집까지의 여행 시각표를 만들고 차량 내비로 넘겨 주는 여행 동선 생성형 AI.**
 
@@ -6,9 +6,9 @@
 
 ## 이 저장소에 있는 것
 
-차량 앱 (Android Automotive OS, Kotlin) 입니다. 차담 화면 (웹앱) 을 띄우고, 그 화면이 차의 기능을 쓸 수 있도록
+차량 앱 (Android Automotive OS, Kotlin) 입니다. Witty 화면 (웹앱) 을 띄우고, 그 화면이 차의 기능을 쓸 수 있도록
 Pleos Playground SDK 를 부르는 다리 (`window.pleos`) 를 화면에 놓습니다.
-일정 계산 엔진 · 서버 · 웹앱 소스는 이 저장소에 없습니다 (공지에 따라 자체 서버 소스는 넣지 않았습니다). 앱은 운영 중인 차담 웹앱을 불러옵니다.
+일정 계산 엔진 · 서버 · 웹앱 소스는 이 저장소에 없습니다 (공지에 따라 자체 서버 소스는 넣지 않았습니다). 앱은 운영 중인 Witty 웹앱을 불러옵니다.
 
 | 화면이 부르는 것 | 차량 앱이 쓰는 Pleos SDK |
 |---|---|
@@ -46,7 +46,7 @@ Pleos Playground SDK 를 부르는 다리 (`window.pleos`) 를 화면에 놓습�
 
 - 에뮬레이터: **Pleos Connect v2.1.0** (AVD 이미지 crp-arm64, `-gpu host` 로 실행)
 - 화면 규격: 앱이 뜨는 App Screen 영역 **840 × 1203 px** (넓은 앱 영역에서는 1682 × 1210 px)
-- 인터넷 연결 필요 (차담 웹앱과 일정 계산 서버)
+- 인터넷 연결 필요 (Witty 웹앱과 일정 계산 서버)
 - 권한: 위치 (`pleos.car.permission.FUSED_LOCATION`), 음성 출력 (`TTS_SERVICE`), 음성 인식 (`STT_SERVICE` · `RECORD_AUDIO`) — 처음 실행할 때 묻습니다
 - 배터리 값을 바꿔 보려면 에뮬레이터의 Virtual Console (`adb forward tcp:8088 tcp:8088` → http://127.0.0.1:8088/) 에서
   `POST /vehicle/ev-battery?field=soc&value=45` 처럼 넣습니다. 배터리 45% 에서는 일정 안에 충전이 한 번 들어갑니다.

@@ -250,7 +250,7 @@ class PleosNative(private val context: Context, private val evaluate: (String) -
                 override fun onRegistered(alertId: String) { synchronized(alerts) { alerts[stopId] = alertId } }
                 override fun onTransition(event: ProximityAlertEvent) {
                     Log.i(TAG, "stop $stopId ${event.transition}")
-                    // Arriving brings 차담 in front of the navigation so the stop board is seen (the navigation runs on)
+                    // Arriving brings Witty in front of the navigation so the stop board is seen (the navigation runs on)
                     if (event.transition == ProximityTransition.ENTER) runCatching {
                         context.startActivity(android.content.Intent(context, MainActivity::class.java)
                             .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT))
