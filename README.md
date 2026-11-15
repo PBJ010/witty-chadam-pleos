@@ -25,14 +25,14 @@ Pleos Playground SDK 를 부르는 다리 (`window.pleos`) 를 화면에 놓습�
 
 ## APK
 
-- `apk/Witty_Chadam_release.apk` (release, 실행 가능한 서명 포함)
+- `apk/Witty_release.apk` (release, 실행 가능한 서명 포함)
 
 ## 실행 방법
 
 1. Pleos Connect 에뮬레이터를 띄웁니다 (아래 테스트 환경).
 2. 설치하고 실행합니다.
    ```bash
-   adb install -r apk/Witty_Chadam_release.apk
+   adb install -r apk/Witty_release.apk
    adb shell am start -n com.journeymanager.pleos/.MainActivity --windowingMode 1
    ```
 3. 처음 한 번은 차량 내비게이션을 열어 둡니다 (내비가 준비되기 전에는 위치 · 경로 요청이 응답하지 않음).
